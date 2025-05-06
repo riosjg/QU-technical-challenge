@@ -8,6 +8,7 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 export function JokeApp() {
   const [selectedType, setSelectedType] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [searchTerm, setSearchTerm] = useState("");
   const {
     data: jokes = [],
     isLoading,
@@ -24,17 +25,25 @@ export function JokeApp() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const sortedJokes = useMemo(() => {
+  const filteredAndSortedJokes = useMemo(() => {
     const uniqueJokes = jokes.filter(
       (joke, index, self) => index === self.findIndex((j) => j.id === joke.id)
     );
 
-    return [...uniqueJokes].sort((a, b) =>
+    const searchFilteredJokes = searchTerm
+      ? uniqueJokes.filter(
+          (joke) =>
+            joke.setup.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            joke.punchline.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : uniqueJokes;
+
+    return [...searchFilteredJokes].sort((a, b) =>
       sortOrder === "asc"
         ? a.setup.localeCompare(b.setup)
         : b.setup.localeCompare(a.setup)
     );
-  }, [jokes, sortOrder]);
+  }, [jokes, sortOrder, searchTerm]);
 
   if (isLoading) return <Typography>Loading jokes…</Typography>;
   if (isError)
@@ -47,13 +56,21 @@ export function JokeApp() {
         onSortOrderChange={setSortOrder}
         selectedType={selectedType}
         onTypeChange={setSelectedType}
+        onSearchChange={setSearchTerm}
       />
-      {sortedJokes.length > 0 &&
-        sortedJokes.map((joke) => <JokeItem key={joke?.id} joke={joke} />)}
+      {filteredAndSortedJokes.length > 0 ? (
+        filteredAndSortedJokes.map((joke) => (
+          <JokeItem key={joke?.id} joke={joke} />
+        ))
+      ) : (
+        <Typography align="center" sx={{ mt: 2 }}>
+          No jokes found
+        </Typography>
+      )}
       <Box ref={ref} sx={{ height: 1, mt: 2 }}>
         {isFetchingNextPage && <CircularProgress />}
       </Box>
-      {!hasNextPage && (
+      {!hasNextPage && filteredAndSortedJokes.length > 0 && (
         <Typography align="center" sx={{ mt: 2 }}>
           No more jokes
         </Typography>

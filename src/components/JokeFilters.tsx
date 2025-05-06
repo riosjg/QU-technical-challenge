@@ -7,8 +7,10 @@ import {
   InputLabel,
   styled,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import { api } from "../services/api";
+import { useDebounce } from "../hooks/useDebounce";
 
 const StyledFormControl = styled(FormControl)({
   flex: 1,
@@ -34,11 +36,31 @@ const StyledSelect = styled(Select)({
   },
 });
 
+const StyledTextField = styled(TextField)({
+  flex: 1,
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "white",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "white",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "white",
+  },
+});
+
 const FiltersContainer = styled(Box)({
   display: "flex",
   marginBottom: 16,
   justifyContent: "center",
   gap: 16,
+  flexWrap: "wrap",
 });
 
 interface JokeFiltersProps {
@@ -46,6 +68,7 @@ interface JokeFiltersProps {
   onSortOrderChange: (order: "asc" | "desc") => void;
   selectedType: string;
   onTypeChange: (type: string) => void;
+  onSearchChange: (search: string) => void;
 }
 
 export function JokeFilters({
@@ -53,9 +76,16 @@ export function JokeFilters({
   onSortOrderChange,
   selectedType,
   onTypeChange,
+  onSearchChange,
 }: JokeFiltersProps) {
   const [types, setTypes] = useState<string[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  useEffect(() => {
+    onSearchChange(debouncedSearchTerm);
+  }, [debouncedSearchTerm, onSearchChange]);
 
   useEffect(() => {
     const fetchTypes = async () => {
@@ -75,6 +105,16 @@ export function JokeFilters({
 
   return (
     <FiltersContainer>
+      <StyledTextField
+        label="Search jokes"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setSearchTerm(e.target.value)
+        }
+        placeholder="Search by setup or punchline..."
+      />
+
       <StyledFormControl>
         <StyledInputLabel>Sort Order</StyledInputLabel>
         <StyledSelect
