@@ -1,13 +1,12 @@
 # Joke App
 
-A React application that displays jokes with filtering, sorting, and pagination capabilities.
+A React application that displays jokes with filtering, sorting, and infinite scroll capabilities.
 
 ## Features
 
 - Fetch and display jokes from the Joke API
-- Search/filter jokes by text
 - Sort jokes in ascending or descending order
-- Pagination support
+- Filter by category
 - Debounced search input
 - Responsive Material-UI design
 - React Query for data fetching and caching
@@ -21,21 +20,13 @@ A React application that displays jokes with filtering, sorting, and pagination 
 - Used for efficient data fetching and caching
 - Provides automatic background refetching
 - Handles loading and error states
-- Implements stale-while-revalidate pattern
 
 ### Project Structure
 
 - `/components`: Reusable UI components
 - `/hooks`: Custom React hooks
 - `/services`: API integration
-- `/tests`: Test files mirroring the source structure
-
-### Component Design
-
-- Small, focused components (< 100 lines)
-- Separation of concerns
-- Reusable hooks for common functionality
-- Material-UI for consistent styling
+- `/tests`: Test files
 
 ## Installation
 
@@ -63,27 +54,15 @@ npm run dev
 Run the test suite:
 
 ```bash
-npm test
-```
-
-Run tests with coverage:
-
-```bash
-npm run test:coverage
-```
-
-## Building for Production
-
-```bash
-npm run build
+npm run test
 ```
 
 ## Technologies Used
 
 - React 19
+- Vite
 - TypeScript
 - Material-UI
 - React Query
 - Vitest
 - React Testing Library
-- Vite
