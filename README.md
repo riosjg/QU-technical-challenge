@@ -1,6 +1,6 @@
 # Joke App
 
-A React application that displays jokes with filtering, sorting, and infinite scroll capabilities.
+A React application that displays jokes with filtering, sorting, and infinite scroll capabilities. Technicall challenge made for QU.
 
 ## Features
 
@@ -33,7 +33,7 @@ A React application that displays jokes with filtering, sorting, and infinite sc
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:riosjg/QU-technical-challenge.git
 cd joke-app
 ```
 
